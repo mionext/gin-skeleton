@@ -1,0 +1,25 @@
+app:
+  env: release
+  debug: false
+  secret: 'nice'
+
+log:
+  age: 28
+  path: logs/log.log
+  size: 500
+  backup: 3
+  compress: false
+
+http:
+  listen: ":8001"
+  enable_cors: true
+
+rds:
+  mysql:
+    dsn: ''
+    open: 10
+    idle: 10
+kv:
+  redis:
+    dsn: ''
+    options: ''
