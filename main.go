@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/fsnotify/fsnotify"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"mionext/srv/app/http/engine"
 	"mionext/srv/app/logger"
 	"net/http"
@@ -14,6 +11,10 @@ import (
 	"runtime"
 	"syscall"
 	"time"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -46,11 +47,11 @@ func main() {
 		}
 	}()
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGINT)
 	<-quit
-	logrus.Println("Shutdown server...")
 
+	logrus.Println("Shutdown server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
