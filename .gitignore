@@ -1,0 +1,6 @@
+.idea
+config.yaml
+go.sum
+logs/!.gitkeep
+logs/*.log
+!/**/.gitkeep
