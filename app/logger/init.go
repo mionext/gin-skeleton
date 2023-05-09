@@ -1,15 +1,15 @@
 package logger
 
 import (
+	"io"
+	"os"
+
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"io"
-	"os"
 )
 
 func Init() error {
-	debug := viper.GetBool("app.debug")
 	rotateWriter := &lumberjack.Logger{
 		Filename:   viper.GetString("log.path"),
 		MaxSize:    viper.GetInt("log.size"),
@@ -19,12 +19,14 @@ func Init() error {
 		Compress:   viper.GetBool("log.compress"),
 	}
 
-	writes := []io.Writer{rotateWriter}
+	debug := viper.GetBool("app.debug")
+	writers := []io.Writer{rotateWriter}
+
 	if debug {
-		writes = append(writes, os.Stdout)
+		writers = append(writers, os.Stdout)
 	}
 
-	logrus.SetOutput(io.MultiWriter(writes...))
+	logrus.SetOutput(io.MultiWriter(writers...))
 	logrus.SetReportCaller(debug)
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{
