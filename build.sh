@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env dash
 set -e
 
 if [ "$1" == "--help" -o "$1" == "-h" ];
