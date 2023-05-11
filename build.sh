@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$1" == "--help" -o "$1" == "-h" ]; then
+if [ "$1" == "--help" -o "$1" == "-h" ];
+then
     echo -e "\033[32m
   Build Applicaton.
   ----------------------------
@@ -35,7 +36,8 @@ echo "[$(date '+%Y-%m-%d %H:%M:%S')] Building command: $cmd"
 
 go build -tags=jsoniter -a -installsuffix cgo -ldflags '-s -w' -o dist/$v .
 
-if [ "$?" == "0" ]; then
+if [ "$?" == "0" ];
+then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Successful."
     # shellcheck disable=SC2225
     cp -f "dist/$v" "dist/srv"
