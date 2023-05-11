@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Init() error {
+func Setup() error {
 	rotateWriter := &lumberjack.Logger{
 		Filename:   viper.GetString("log.path"),
 		MaxSize:    viper.GetInt("log.size"),
@@ -28,7 +28,7 @@ func Init() error {
 
 	logrus.SetOutput(io.MultiWriter(writers...))
 	logrus.SetReportCaller(debug)
-	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetLevel(logrus.TraceLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{
 		DisableHTMLEscape: true,
 		TimestampFormat:   "2006-01-02 15:04:05",

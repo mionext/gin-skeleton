@@ -2,6 +2,10 @@ app:
   env: release
   debug: false
   secret: 'nice'
+  
+jwt:
+  ttl: 3600
+  secret: ''
 
 log:
   age: 28

@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"mionext/srv/app/http/engine"
+	"mionext/srv/app/db"
+	"mionext/srv/app/http/server"
 	"mionext/srv/app/logger"
 	"net/http"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 	"time"
 
@@ -23,7 +23,7 @@ func init() {
 	viper.SetConfigName("config")
 
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("[ERROR] Init config failed: %s", err.Error())
+		fmt.Printf("[ERROR] Setup config failed: %s", err.Error())
 		os.Exit(2)
 	}
 
@@ -32,33 +32,36 @@ func init() {
 		fmt.Println("config change: ", e.String())
 	})
 
-	if err := logger.Init(); err != nil {
-		fmt.Printf("[ERROR] Init logger failed: %s", err.Error())
+	if err := logger.Setup(); err != nil {
+		fmt.Printf("[ERROR] Setup logger failed: %s", err.Error())
 		os.Exit(2)
 	}
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU() * 2)
-	server := &http.Server{Addr: viper.GetString("http.listen"), Handler: engine.Init()}
+	srv := server.Setup()
 	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.Fatalf("[ERROR] Failed to listen and serve: %s", err.Error())
+		logrus.Infof("Start serving on %s", srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logrus.Fatalf("Failed to listen and serve: %s\n", err.Error())
 		}
 	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGINT)
-	<-quit
+	sig := <-quit
 
-	logrus.Println("Shutdown server...")
+	logrus.Warnf("Shutdown server on signal: %s", sig)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	if err := server.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(ctx); err != nil {
 		logrus.Fatalf("Server shutdown: %s", err.Error())
 	}
 
-	// db.Close()
-	logrus.Fatalf("Server exiting.")
+	logrus.Warnf("Server exiting.")
+	// Destruct resources
+	defer func() {
+		db.Close()
+	}()
 }
