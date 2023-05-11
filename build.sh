@@ -4,7 +4,7 @@ set -e
 if [ "$1" = "--help" -o "$1" = "-h" ];
 then
     echo -e "\033[32m
-  Build Applicaton.
+  Build Application.
   ----------------------------
   Usage:
     - ./build.sh [os (linux | darwin)]    Compile the package for the given platform. default darwin
