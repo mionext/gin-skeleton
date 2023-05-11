@@ -20,7 +20,7 @@ import (
 func init() {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
+	viper.SetConfigName("config.yaml")
 
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Printf("[ERROR] Setup config failed: %s", err.Error())
