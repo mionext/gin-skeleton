@@ -1,1 +1,1 @@
-cp -f config.yaml dist/
+cp -f config.example.yaml dist/config.yaml

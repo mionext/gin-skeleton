@@ -2,7 +2,7 @@ app:
   env: release
   debug: false
   secret: 'nice'
-  
+
 jwt:
   ttl: 3600
   secret: ''
@@ -20,9 +20,10 @@ http:
 
 rds:
   mysql:
-    dsn: ''
+    dsn: 'root:@tcp(127.0.0.1:3306)/fs'
     open: 10
     idle: 10
+
 kv:
   redis:
     dsn: ''
